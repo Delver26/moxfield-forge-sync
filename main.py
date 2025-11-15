@@ -77,6 +77,9 @@ def build_dck_file(deck_json, forge_folder):
     commanders = get_board_string(deck_json["boards"]["commanders"])
     mainboard = get_board_string(deck_json["boards"]["mainboard"])
     sideboard = get_board_string(deck_json["boards"]["sideboard"])
+    # Limit sideboard to first 10 lines as it's a Forge requirement
+    sideboard_lines = sideboard.split("\n") if sideboard else []
+    sideboard = "\n".join(sideboard_lines[:10])
     planes = get_board_string(deck_json["boards"]["planes"])
     schemes = get_board_string(deck_json["boards"]["schemes"])
     conspiracy = ""
