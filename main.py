@@ -1,10 +1,14 @@
 import requests
 import os
+import sys
+from sanitize_filename import sanitize
 
 HOST = "api.moxfield.com"
-USERNAME = "robrtsql"
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:135.0) Gecko/20100101 Firefox/135.0"
-FORGE_DECKS_FOLDER = "/Users/rob/commonsync/Forge/decks"
+
+FORGE_DECKS_FOLDER = "C:\\Users\\delver\\AppData\\Roaming\\Forge\\decks"
+USERNAME = sys.argv[1]
+
 TEMPLATE = """[metadata]
 Name={}
 
@@ -77,20 +81,18 @@ def build_dck_file(deck_json):
         attractions
     )
     dck_filename = f'{deck_json["name"]}.dck'
+    dck_filename = sanitize(dck_filename)
     dck_full_path = os.path.join(FORGE_DECKS_FOLDER, 'commander', dck_filename)
     print(f'Writing {dck_full_path}.')
-    with open(dck_full_path, 'w') as dck_file:
+    with open(dck_full_path, 'w', encoding='utf-8') as dck_file:
         dck_file.write(dck_txt)
-
 
 def get_board_string(board):
     return '\n'.join([get_card_string(card["card"], card["quantity"])
                       for card in list(board["cards"].values())])
 
-
 def get_card_string(card, quantity):
     return f'{quantity} {card["name"]}|{card["set"].upper()}|1'
-
 
 if __name__ == "__main__":
     main()
